@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tracker de hábitos saludables</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f0; color: #1a1a18; min-height: 100vh; padding: 1.5rem 1rem; }
+    h1 { font-size: 22px; font-weight: 500; margin-bottom: 1.5rem; }
+    .app { max-width: 680px; margin: 0 auto; }
+    .tab-bar { display: flex; gap: 8px; margin-bottom: 1.5rem; }
+    .tab { padding: 8px 20px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; cursor: pointer; background: transparent; color: #666; font-family: inherit; }
+    .tab.active { background: #e8e8e3; color: #1a1a18; font-weight: 500; border-color: #999; }
+    .section { background: #fff; border: 1px solid #e5e5e0; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 12px; }
+    .habit-header { display: flex; align-items: center; gap: 12px; }
+    .habit-title { font-size: 15px; font-weight: 500; color: #1a1a18; flex: 1; }
+    .toggle { display: flex; gap: 6px; }
+    .btn-yn { padding: 5px 14px; border-radius: 8px; border: 1px solid #ccc; font-size: 13px; cursor: pointer; background: transparent; color: #666; font-family: inherit; transition: all 0.15s; }
+    .btn-yn:hover { background: #f0f0eb; }
+    .btn-yn.selected-si { background: #EAF3DE; color: #3B6D11; border-color: #639922; }
+    .btn-yn.selected-no { background: #FCEBEB; color: #A32D2D; border-color: #E24B4A; }
+    .habit-detail { margin-top: 14px; border-top: 1px solid #e5e5e0; padding-top: 14px; display: none; }
+    .habit-detail.open { display: block; }
+    .detail-label { font-size: 12px; color: #888; margin-bottom: 6px; }
+    .stars { display: flex; gap: 6px; margin-bottom: 4px; }
+    .star { width: 28px; height: 28px; border-radius: 8px; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; background: transparent; transition: all 0.15s; }
+    .star.active { background: #FAEEDA; border-color: #EF9F27; }
+    .time-input { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .time-input:last-child { margin-bottom: 0; }
+    .time-input input[type=number] { width: 70px; padding: 6px 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; background: #fff; color: #1a1a18; font-family: inherit; }
+    .time-input input[type=number]:focus { outline: none; border-color: #639922; box-shadow: 0 0 0 3px rgba(99,153,34,0.15); }
+    .time-input span { font-size: 13px; color: #888; }
+    .sport-btns { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .sport-btn { padding: 6px 16px; border-radius: 8px; border: 1px solid #ccc; font-size: 13px; cursor: pointer; background: transparent; color: #666; font-family: inherit; }
+    .sport-btn.selected { background: #E6F1FB; color: #185FA5; border-color: #378ADD; }
+    .subsection { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e5e0; }
+    .subsection-label { font-size: 13px; font-weight: 500; color: #1a1a18; margin-bottom: 8px; }
+    .date-nav { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; }
+    .date-nav button { padding: 6px 14px; border-radius: 8px; border: 1px solid #ccc; font-size: 18px; cursor: pointer; background: transparent; color: #666; font-family: inherit; }
+    .date-nav button:hover { background: #e8e8e3; }
+    .date-label { font-size: 16px; font-weight: 500; color: #1a1a18; flex: 1; text-align: center; }
+    .save-btn { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #639922; background: #EAF3DE; color: #3B6D11; font-size: 15px; font-weight: 500; cursor: pointer; font-family: inherit; margin-top: 4px; transition: background 0.15s; }
+    .save-btn:hover { background: #C0DD97; }
+    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+    .metric-card { background: #e8e8e3; border-radius: 8px; padding: 1rem; text-align: center; }
+    .metric-val { font-size: 24px; font-weight: 500; color: #1a1a18; }
+    .metric-lbl { font-size: 12px; color: #666; margin-top: 4px; }
+    .timeframe-bar { display: flex; gap: 6px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .tf-btn { padding: 6px 14px; border-radius: 8px; border: 1px solid #ccc; font-size: 13px; cursor: pointer; background: transparent; color: #666; font-family: inherit; }
+    .tf-btn.active { background: #e8e8e3; color: #1a1a18; border-color: #999; font-weight: 500; }
+    .chart-wrap { position: relative; width: 100%; height: 220px; margin-bottom: 1.5rem; }
+    .habit-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #e5e5e0; }
+    .habit-row:last-child { border-bottom: none; }
+    .habit-row-name { font-size: 14px; color: #1a1a18; flex: 1; }
+    .habit-bar-wrap { width: 120px; height: 8px; background: #e8e8e3; border-radius: 4px; overflow: hidden; }
+    .habit-bar { height: 100%; border-radius: 4px; background: #639922; }
+    .habit-pct { font-size: 13px; color: #888; min-width: 36px; text-align: right; }
+    .empty-msg { text-align: center; color: #888; font-size: 14px; padding: 2rem 0; }
+    .section-title { font-size: 13px; font-weight: 500; color: #888; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #3B6D11; color: #EAF3DE; padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 500; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; z-index: 100; }
+    .toast.show { opacity: 1; }
+    @media (prefers-color-scheme: dark) {
+      body { background: #1a1a18; color: #e8e8e3; }
+      .section { background: #252523; border-color: #3a3a38; }
+      .tab { border-color: #3a3a38; color: #aaa; }
+      .tab.active { background: #333330; color: #e8e8e3; border-color: #666; }
+      .btn-yn { border-color: #3a3a38; color: #aaa; }
+      .btn-yn:hover { background: #333330; }
+      .habit-title, .subsection-label, .date-label, .habit-row-name, .metric-val { color: #e8e8e3; }
+      .detail-label, .time-input span, .metric-lbl, .habit-pct, .section-title, .empty-msg { color: #888; }
+      .habit-detail, .subsection { border-color: #3a3a38; }
+      .time-input input[type=number] { background: #1a1a18; border-color: #3a3a38; color: #e8e8e3; }
+      .star { border-color: #3a3a38; }
+      .sport-btn { border-color: #3a3a38; color: #aaa; }
+      .metric-card { background: #333330; }
+      .tf-btn { border-color: #3a3a38; color: #aaa; }
+      .tf-btn.active { background: #333330; color: #e8e8e3; border-color: #666; }
+      .habit-bar-wrap { background: #333330; }
+      .habit-row { border-color: #3a3a38; }
+      .date-nav button { border-color: #3a3a38; color: #aaa; }
+      .date-nav button:hover { background: #333330; }
+      h1 { color: #e8e8e3; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <h1>Mis hábitos saludables</h1>
+
+  <div class="tab-bar">
+    <button class="tab active" onclick="showTab('registro')">Registro diario</button>
+    <button class="tab" onclick="showTab('dashboard')">Dashboard</button>
+  </div>
+
+  <div id="tab-registro">
+    <div class="date-nav">
+      <button onclick="changeDay(-1)">&#8592;</button>
+      <span class="date-label" id="date-label"></span>
+      <button onclick="changeDay(1)">&#8594;</button>
+    </div>
+
+    <div class="section" id="habit-alimentacion">
+      <div class="habit-header">
+        <span style="font-size:18px;">🥗</span>
+        <span class="habit-title">Alimentación saludable</span>
+        <div class="toggle">
+          <button class="btn-yn" onclick="toggleHabit('alimentacion','si',this)">Sí</button>
+          <button class="btn-yn" onclick="toggleHabit('alimentacion','no',this)">No</button>
+        </div>
+      </div>
+      <div class="habit-detail" id="detail-alimentacion">
+        <div class="detail-label">¿Qué tan saludable comiste hoy?</div>
+        <div class="stars" id="stars-alimentacion">
+          <button class="star" onclick="setStar('alimentacion',1)">★</button>
+          <button class="star" onclick="setStar('alimentacion',2)">★</button>
+          <button class="star" onclick="setStar('alimentacion',3)">★</button>
+          <button class="star" onclick="setStar('alimentacion',4)">★</button>
+          <button class="star" onclick="setStar('alimentacion',5)">★</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="habit-ejercicio">
+      <div class="habit-header">
+        <span style="font-size:18px;">💪</span>
+        <span class="habit-title">Actividad física</span>
+        <div class="toggle">
+          <button class="btn-yn" onclick="toggleHabit('ejercicio','si',this)">Sí</button>
+          <button class="btn-yn" onclick="toggleHabit('ejercicio','no',this)">No</button>
+        </div>
+      </div>
+      <div class="habit-detail" id="detail-ejercicio">
+        <div class="detail-label">Tipo de actividad</div>
+        <div class="sport-btns">
+          <button class="sport-btn" onclick="setSport('pesas',this)">🏋️ Pesas</button>
+          <button class="sport-btn" onclick="setSport('running',this)">🏃 Running</button>
+          <button class="sport-btn" onclick="setSport('otro',this)">Otro</button>
+        </div>
+        <div class="detail-label">Duración</div>
+        <div class="time-input">
+          <input type="number" id="ejercicio-min" min="0" max="300" placeholder="0" oninput="saveNum('ejercicio','min',this.value)">
+          <span>minutos</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="habit-lectura">
+      <div class="habit-header">
+        <span style="font-size:18px;">📚</span>
+        <span class="habit-title">Lectura</span>
+        <div class="toggle">
+          <button class="btn-yn" onclick="toggleHabit('lectura','si',this)">Sí</button>
+          <button class="btn-yn" onclick="toggleHabit('lectura','no',this)">No</button>
+        </div>
+      </div>
+      <div class="habit-detail" id="detail-lectura">
+        <div class="detail-label">Tiempo de lectura</div>
+        <div class="time-input">
+          <input type="number" id="lectura-min" min="0" max="600" placeholder="0" oninput="saveNum('lectura','min',this.value)">
+          <span>minutos</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="habit-pantalla">
+      <div class="habit-header">
+        <span style="font-size:18px;">📱</span>
+        <span class="habit-title">Tiempo en pantalla</span>
+        <div class="toggle">
+          <button class="btn-yn" onclick="toggleHabit('pantalla','si',this)">Registrar</button>
+          <button class="btn-yn" onclick="toggleHabit('pantalla','no',this)">Saltar</button>
+        </div>
+      </div>
+      <div class="habit-detail" id="detail-pantalla">
+        <div class="detail-label">Horas en el celular hoy</div>
+        <div class="time-input">
+          <input type="number" id="pantalla-h" min="0" max="24" step="0.5" placeholder="0" oninput="saveNum('pantalla','h',this.value)">
+          <span>horas</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="habit-agua">
+      <div class="habit-header">
+        <span style="font-size:18px;">💧</span>
+        <span class="habit-title">Hidratación</span>
+        <div class="toggle">
+          <button class="btn-yn" onclick="toggleHabit('agua','si',this)">Sí</button>
+          <button class="btn-yn" onclick="toggleHabit('agua','no',this)">No</button>
+        </div>
+      </div>
+      <div class="habit-detail" id="detail-agua">
+        <div class="detail-label">Litros de agua tomados</div>
+        <div class="time-input">
+          <input type="number" id="agua-l" min="0" max="10" step="0.25" placeholder="0" oninput="saveNum('agua','l',this.value)">
+          <span>litros</span>
+        </div>
+        <div class="subsection">
+          <div class="subsection-label">¿Tomaste alcohol hoy?</div>
+          <div class="toggle">
+            <button class="btn-yn" id="alcohol-si" onclick="setAlcohol('si')">Sí</button>
+            <button class="btn-yn" id="alcohol-no" onclick="setAlcohol('no')">No</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="habit-sueno">
+      <div class="habit-header">
+        <span style="font-size:18px;">😴</span>
+        <span class="habit-title">Sueño</span>
+        <div class="toggle">
+          <button class="btn-yn" onclick="toggleHabit('sueno','si',this)">Registrar</button>
+          <button class="btn-yn" onclick="toggleHabit('sueno','no',this)">Saltar</button>
+        </div>
+      </div>
+      <div class="habit-detail" id="detail-sueno">
+        <div class="detail-label">Horas dormidas anoche</div>
+        <div class="time-input">
+          <input type="number" id="sueno-h" min="0" max="24" step="0.5" placeholder="0" oninput="saveNum('sueno','h',this.value)">
+          <span>horas</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="save-btn" onclick="saveDay()">Guardar día</button>
+  </div>
+
+  <div id="tab-dashboard" style="display:none;">
+    <div class="timeframe-bar">
+      <button class="tf-btn active" onclick="setTF('semana',this)">Semana</button>
+      <button class="tf-btn" onclick="setTF('mes',this)">Mes</button>
+      <button class="tf-btn" onclick="setTF('año',this)">Año</button>
+      <button class="tf-btn" onclick="setTF('total',this)">Total</button>
+    </div>
+    <div class="metric-grid" id="metric-grid"></div>
+    <div class="section">
+      <div class="section-title">Adherencia por hábito</div>
+      <div id="habit-bars"></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Días registrados</div>
+      <div class="chart-wrap">
+        <canvas id="mainChart" role="img" aria-label="Hábitos completados por día">Gráfico de progreso diario.</canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Día guardado ✓</div>
+
+<script>
+  let currentDate = new Date(); currentDate.setHours(0,0,0,0);
+  let currentTF = 'semana';
+  let chartInstance = null;
+  const HABITS = ['alimentacion','ejercicio','lectura','pantalla','agua','sueno'];
+  const HABIT_NAMES = { alimentacion:'Alimentación', ejercicio:'Act. física', lectura:'Lectura', pantalla:'Pantalla', agua:'Hidratación', sueno:'Sueño' };
+
+  function dateKey(d) { return d.toISOString().slice(0,10); }
+  function getStore() { try { return JSON.parse(localStorage.getItem('hb_data_v2') || '{}'); } catch { return {}; } }
+  function saveStore(d) { try { localStorage.setItem('hb_data_v2', JSON.stringify(d)); } catch {} }
+
+  let dayState = {};
+
+  function updateDateLabel() {
+    const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+    const label = currentDate.toLocaleDateString('es-AR', opts);
+    document.getElementById('date-label').textContent = label.charAt(0).toUpperCase() + label.slice(1);
+  }
+
+  function loadDayState() {
+    const store = getStore();
+    const k = dateKey(currentDate);
+    dayState = store[k] ? JSON.parse(JSON.stringify(store[k])) : {};
+    HABITS.forEach(h => {
+      const siBtn = document.querySelector('#habit-' + h + ' .btn-yn:first-child');
+      const noBtn = document.querySelector('#habit-' + h + ' .btn-yn:last-child');
+      const detail = document.getElementById('detail-' + h);
+      siBtn.className = 'btn-yn'; noBtn.className = 'btn-yn';
+      detail.classList.remove('open');
+      if (dayState[h]) {
+        if (dayState[h].val === 'si') { siBtn.classList.add('selected-si'); detail.classList.add('open'); }
+        else if (dayState[h].val === 'no') { noBtn.classList.add('selected-no'); }
+      }
+    });
+    if (dayState.alimentacion && dayState.alimentacion.stars) setStar('alimentacion', dayState.alimentacion.stars, true);
+    if (dayState.ejercicio && dayState.ejercicio.sport) restoreSport(dayState.ejercicio.sport);
+    [['ejercicio','min'],['lectura','min'],['pantalla','h'],['agua','l'],['sueno','h']].forEach(function(pair) {
+      var h = pair[0], p = pair[1];
+      var el = document.getElementById(h + '-' + p);
+      if (el) el.value = (dayState[h] && dayState[h][p] != null) ? dayState[h][p] : '';
+    });
+    var asi = document.getElementById('alcohol-si');
+    var ano = document.getElementById('alcohol-no');
+    if (asi && ano) {
+      asi.className = 'btn-yn'; ano.className = 'btn-yn';
+      if (dayState.agua && dayState.agua.alcohol === 'si') asi.classList.add('selected-si');
+      else if (dayState.agua && dayState.agua.alcohol === 'no') ano.classList.add('selected-no');
+    }
+  }
+
+  function toggleHabit(h, v, btn) {
+    if (!dayState[h]) dayState[h] = {};
+    dayState[h].val = v;
+    var siBtn = document.querySelector('#habit-' + h + ' .btn-yn:first-child');
+    var noBtn = document.querySelector('#habit-' + h + ' .btn-yn:last-child');
+    siBtn.className = 'btn-yn'; noBtn.className = 'btn-yn';
+    var detail = document.getElementById('detail-' + h);
+    if (v === 'si') { siBtn.classList.add('selected-si'); detail.classList.add('open'); }
+    else { noBtn.classList.add('selected-no'); detail.classList.remove('open'); }
+  }
+
+  function setStar(h, n, silent) {
+    if (!dayState[h]) dayState[h] = {};
+    dayState[h].stars = n;
+    document.querySelectorAll('#stars-' + h + ' .star').forEach(function(s, i) { s.classList.toggle('active', i < n); });
+  }
+
+  function restoreSport(s) {
+    document.querySelectorAll('.sport-btn').forEach(function(b) {
+      var txt = b.textContent.toLowerCase();
+      if ((s==='pesas'&&txt.includes('pesa'))||(s==='running'&&txt.includes('run'))||(s==='otro'&&txt.includes('otro'))) b.classList.add('selected');
+      else b.classList.remove('selected');
+    });
+  }
+
+  function setSport(s, btn) {
+    if (!dayState.ejercicio) dayState.ejercicio = {};
+    dayState.ejercicio.sport = s;
+    document.querySelectorAll('.sport-btn').forEach(function(b) { b.classList.remove('selected'); });
+    if (btn) btn.classList.add('selected');
+  }
+
+  function saveNum(h, prop, val) {
+    if (!dayState[h]) dayState[h] = {};
+    dayState[h][prop] = parseFloat(val) || 0;
+  }
+
+  function setAlcohol(v) {
+    if (!dayState.agua) dayState.agua = {};
+    dayState.agua.alcohol = v;
+    var si = document.getElementById('alcohol-si');
+    var no = document.getElementById('alcohol-no');
+    si.className = 'btn-yn'; no.className = 'btn-yn';
+    if (v === 'si') si.classList.add('selected-si');
+    else no.classList.add('selected-no');
+  }
+
+  function saveDay() {
+    var store = getStore();
+    store[dateKey(currentDate)] = JSON.parse(JSON.stringify(dayState));
+    saveStore(store);
+    var toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(function() { toast.classList.remove('show'); }, 2000);
+  }
+
+  function changeDay(d) {
+    currentDate = new Date(currentDate);
+    currentDate.setDate(currentDate.getDate() + d);
+    updateDateLabel();
+    loadDayState();
+  }
+
+  function showTab(t) {
+    document.getElementById('tab-registro').style.display = t === 'registro' ? '' : 'none';
+    document.getElementById('tab-dashboard').style.display = t === 'dashboard' ? '' : 'none';
+    document.querySelectorAll('.tab').forEach(function(b, i) {
+      b.classList.toggle('active', (i===0&&t==='registro')||(i===1&&t==='dashboard'));
+    });
+    if (t === 'dashboard') renderDashboard();
+  }
+
+  function getFilteredDays() {
+    var store = getStore();
+    var now = new Date(); now.setHours(0,0,0,0);
+    var keys = Object.keys(store).sort();
+    if (currentTF === 'total') return keys;
+    var cutoff = new Date(now);
+    if (currentTF === 'semana') cutoff.setDate(cutoff.getDate() - 6);
+    else if (currentTF === 'mes') cutoff.setDate(cutoff.getDate() - 29);
+    else cutoff.setDate(cutoff.getDate() - 364);
+    return keys.filter(function(k) { return k >= dateKey(cutoff); });
+  }
+
+  function calcStreak(store) {
+    var now = new Date(); now.setHours(0,0,0,0);
+    var streak = 0, d = new Date(now);
+    while (true) {
+      var k = dateKey(d);
+      if (!store[k] || !HABITS.some(function(h) { return store[k][h] && store[k][h].val === 'si'; })) break;
+      streak++; d.setDate(d.getDate() - 1);
+    }
+    return streak;
+  }
+
+  function renderDashboard() {
+    var store = getStore();
+    var days = getFilteredDays();
+    var n = days.length;
+    var completedPerDay = days.map(function(k) {
+      return HABITS.filter(function(h) { return store[k][h] && store[k][h].val === 'si'; }).length;
+    });
+    var avgScore = n > 0 ? (completedPerDay.reduce(function(a,b){return a+b;},0) / n / HABITS.length * 100) : 0;
+    var streak = calcStreak(store);
+    var alcoholDays = days.filter(function(k) { return store[k].agua && store[k].agua.alcohol === 'si'; }).length;
+
+    document.getElementById('metric-grid').innerHTML =
+      '<div class="metric-card"><div class="metric-val">' + n + '</div><div class="metric-lbl">Días registrados</div></div>' +
+      '<div class="metric-card"><div class="metric-val">' + Math.round(avgScore) + '%</div><div class="metric-lbl">Adherencia promedio</div></div>' +
+      '<div class="metric-card"><div class="metric-val">' + streak + '</div><div class="metric-lbl">Racha actual</div></div>' +
+      '<div class="metric-card"><div class="metric-val">' + alcoholDays + '</div><div class="metric-lbl">Días con alcohol</div></div>';
+
+    var barsEl = document.getElementById('habit-bars');
+    if (n === 0) {
+      barsEl.innerHTML = '<div class="empty-msg">Aún no hay datos. Empezá completando tu primer día.</div>';
+    } else {
+      barsEl.innerHTML = HABITS.map(function(h) {
+        var count = days.filter(function(k) { return store[k][h] && store[k][h].val === 'si'; }).length;
+        var pct = Math.round(count / n * 100);
+        return '<div class="habit-row"><span class="habit-row-name">' + HABIT_NAMES[h] + '</span><div class="habit-bar-wrap"><div class="habit-bar" style="width:' + pct + '%"></div></div><span class="habit-pct">' + pct + '%</span></div>';
+      }).join('');
+    }
+
+    if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+    var canvas = document.getElementById('mainChart');
+    if (n === 0) { canvas.parentElement.style.display = 'none'; return; }
+    canvas.parentElement.style.display = '';
+    var labels = days.map(function(k) {
+      var d = new Date(k + 'T00:00:00');
+      return d.toLocaleDateString('es-AR', {day:'numeric', month:'short'});
+    });
+    chartInstance = new Chart(canvas, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Hábitos completados',
+          data: completedPerDay,
+          backgroundColor: '#9FE1CB',
+          borderColor: '#1D9E75',
+          borderWidth: 1,
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { min: 0, max: HABITS.length, ticks: { stepSize: 1, color: '#888780' }, grid: { color: 'rgba(136,135,128,0.15)' } },
+          x: { ticks: { color: '#888780', autoSkip: true, maxRotation: 45 }, grid: { display: false } }
+        }
+      }
+    });
+  }
+
+  function setTF(tf, btn) {
+    currentTF = tf;
+    document.querySelectorAll('.tf-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    renderDashboard();
+  }
+
+  updateDateLabel();
+  loadDayState();
+</script>
+</body>
+</html>
