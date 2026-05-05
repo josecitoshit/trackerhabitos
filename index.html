@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tracker de hábitos saludables</title>
+  <title>Tracker Salud Jobix</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -13,6 +13,19 @@
     .tab-bar { display: flex; gap: 8px; margin-bottom: 1.5rem; }
     .tab { padding: 8px 20px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; cursor: pointer; background: transparent; color: #666; font-family: inherit; }
     .tab.active { background: #e8e8e3; color: #1a1a18; font-weight: 500; border-color: #999; }
+
+    /* DATE PICKER */
+    .date-picker-wrap { margin-bottom: 1.5rem; }
+    .date-picker-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+    .date-picker-row input[type=date] { padding: 7px 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 15px; font-family: inherit; background: #fff; color: #1a1a18; cursor: pointer; }
+    .date-picker-row input[type=date]:focus { outline: none; border-color: #639922; box-shadow: 0 0 0 3px rgba(99,153,34,0.15); }
+    .date-nav-btns { display: flex; gap: 6px; }
+    .date-nav-btns button { padding: 7px 14px; border-radius: 8px; border: 1px solid #ccc; font-size: 15px; cursor: pointer; background: transparent; color: #666; font-family: inherit; }
+    .date-nav-btns button:hover { background: #e8e8e3; }
+    .date-label-full { font-size: 15px; font-weight: 500; color: #1a1a18; padding: 4px 0; }
+    .today-btn { padding: 6px 14px; border-radius: 8px; border: 1px solid #ccc; font-size: 13px; cursor: pointer; background: transparent; color: #666; font-family: inherit; }
+    .today-btn:hover { background: #e8e8e3; }
+
     .section { background: #fff; border: 1px solid #e5e5e0; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 12px; }
     .habit-header { display: flex; align-items: center; gap: 12px; }
     .habit-title { font-size: 15px; font-weight: 500; color: #1a1a18; flex: 1; }
@@ -25,8 +38,12 @@
     .habit-detail.open { display: block; }
     .detail-label { font-size: 12px; color: #888; margin-bottom: 6px; }
     .stars { display: flex; gap: 6px; margin-bottom: 4px; }
-    .star { width: 28px; height: 28px; border-radius: 8px; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; background: transparent; transition: all 0.15s; }
+    .star { width: 32px; height: 32px; border-radius: 8px; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; background: transparent; transition: all 0.15s; }
     .star.active { background: #FAEEDA; border-color: #EF9F27; }
+    .star-zero { width: 32px; height: 32px; border-radius: 8px; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; font-size: 13px; cursor: pointer; background: transparent; color: #aaa; transition: all 0.15s; }
+    .star-zero.active { background: #FCEBEB; border-color: #E24B4A; color: #A32D2D; }
+    .alim-stars-wrap { display: flex; align-items: center; gap: 6px; }
+    .alim-score-label { font-size: 13px; color: #888; margin-left: 6px; }
     .time-input { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
     .time-input:last-child { margin-bottom: 0; }
     .time-input input[type=number] { width: 70px; padding: 6px 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; background: #fff; color: #1a1a18; font-family: inherit; }
@@ -37,10 +54,6 @@
     .sport-btn.selected { background: #E6F1FB; color: #185FA5; border-color: #378ADD; }
     .subsection { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e5e0; }
     .subsection-label { font-size: 13px; font-weight: 500; color: #1a1a18; margin-bottom: 8px; }
-    .date-nav { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; }
-    .date-nav button { padding: 6px 14px; border-radius: 8px; border: 1px solid #ccc; font-size: 18px; cursor: pointer; background: transparent; color: #666; font-family: inherit; }
-    .date-nav button:hover { background: #e8e8e3; }
-    .date-label { font-size: 16px; font-weight: 500; color: #1a1a18; flex: 1; text-align: center; }
     .save-btn { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #639922; background: #EAF3DE; color: #3B6D11; font-size: 15px; font-weight: 500; cursor: pointer; font-family: inherit; margin-top: 4px; transition: background 0.15s; }
     .save-btn:hover { background: #C0DD97; }
     .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
@@ -61,6 +74,7 @@
     .section-title { font-size: 13px; font-weight: 500; color: #888; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
     .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #3B6D11; color: #EAF3DE; padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 500; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; z-index: 100; }
     .toast.show { opacity: 1; }
+
     @media (prefers-color-scheme: dark) {
       body { background: #1a1a18; color: #e8e8e3; }
       .section { background: #252523; border-color: #3a3a38; }
@@ -68,26 +82,25 @@
       .tab.active { background: #333330; color: #e8e8e3; border-color: #666; }
       .btn-yn { border-color: #3a3a38; color: #aaa; }
       .btn-yn:hover { background: #333330; }
-      .habit-title, .subsection-label, .date-label, .habit-row-name, .metric-val { color: #e8e8e3; }
-      .detail-label, .time-input span, .metric-lbl, .habit-pct, .section-title, .empty-msg { color: #888; }
+      .habit-title, .subsection-label, .habit-row-name, .metric-val, .date-label-full { color: #e8e8e3; }
+      .detail-label, .time-input span, .metric-lbl, .habit-pct, .section-title, .empty-msg, .alim-score-label { color: #888; }
       .habit-detail, .subsection { border-color: #3a3a38; }
-      .time-input input[type=number] { background: #1a1a18; border-color: #3a3a38; color: #e8e8e3; }
-      .star { border-color: #3a3a38; }
-      .sport-btn { border-color: #3a3a38; color: #aaa; }
+      .time-input input[type=number], .date-picker-row input[type=date] { background: #252523; border-color: #3a3a38; color: #e8e8e3; }
+      .star, .star-zero, .sport-btn { border-color: #3a3a38; }
       .metric-card { background: #333330; }
       .tf-btn { border-color: #3a3a38; color: #aaa; }
       .tf-btn.active { background: #333330; color: #e8e8e3; border-color: #666; }
       .habit-bar-wrap { background: #333330; }
       .habit-row { border-color: #3a3a38; }
-      .date-nav button { border-color: #3a3a38; color: #aaa; }
-      .date-nav button:hover { background: #333330; }
+      .date-nav-btns button, .today-btn { border-color: #3a3a38; color: #aaa; }
+      .date-nav-btns button:hover, .today-btn:hover { background: #333330; }
       h1 { color: #e8e8e3; }
     }
   </style>
 </head>
 <body>
 <div class="app">
-  <h1>Mis hábitos saludables</h1>
+  <h1>Tracker Salud Jobix</h1>
 
   <div class="tab-bar">
     <button class="tab active" onclick="showTab('registro')">Registro diario</button>
@@ -95,29 +108,35 @@
   </div>
 
   <div id="tab-registro">
-    <div class="date-nav">
-      <button onclick="changeDay(-1)">&#8592;</button>
-      <span class="date-label" id="date-label"></span>
-      <button onclick="changeDay(1)">&#8594;</button>
+
+    <div class="date-picker-wrap">
+      <div class="date-picker-row">
+        <input type="date" id="date-input" onchange="onDateInputChange(this.value)">
+        <div class="date-nav-btns">
+          <button onclick="changeDay(-1)">&#8592;</button>
+          <button onclick="changeDay(1)">&#8594;</button>
+        </div>
+        <button class="today-btn" onclick="goToday()">Hoy</button>
+      </div>
+      <div class="date-label-full" id="date-label"></div>
     </div>
 
-    <div class="section" id="habit-alimentacion">
+    <!-- ALIMENTACION: solo estrellas, sin si/no -->
+    <div class="section">
       <div class="habit-header">
         <span style="font-size:18px;">🥗</span>
         <span class="habit-title">Alimentación saludable</span>
-        <div class="toggle">
-          <button class="btn-yn" onclick="toggleHabit('alimentacion','si',this)">Sí</button>
-          <button class="btn-yn" onclick="toggleHabit('alimentacion','no',this)">No</button>
-        </div>
       </div>
-      <div class="habit-detail" id="detail-alimentacion">
-        <div class="detail-label">¿Qué tan saludable comiste hoy?</div>
-        <div class="stars" id="stars-alimentacion">
-          <button class="star" onclick="setStar('alimentacion',1)">★</button>
-          <button class="star" onclick="setStar('alimentacion',2)">★</button>
-          <button class="star" onclick="setStar('alimentacion',3)">★</button>
-          <button class="star" onclick="setStar('alimentacion',4)">★</button>
-          <button class="star" onclick="setStar('alimentacion',5)">★</button>
+      <div style="margin-top:14px;">
+        <div class="detail-label">¿Cómo comiste hoy? (0 = nada saludable, 5 = muy saludable)</div>
+        <div class="alim-stars-wrap" style="margin-top:8px;">
+          <button class="star-zero" id="star-alim-0" onclick="setStar('alimentacion',0)">✕</button>
+          <button class="star" id="star-alim-1" onclick="setStar('alimentacion',1)">★</button>
+          <button class="star" id="star-alim-2" onclick="setStar('alimentacion',2)">★</button>
+          <button class="star" id="star-alim-3" onclick="setStar('alimentacion',3)">★</button>
+          <button class="star" id="star-alim-4" onclick="setStar('alimentacion',4)">★</button>
+          <button class="star" id="star-alim-5" onclick="setStar('alimentacion',5)">★</button>
+          <span class="alim-score-label" id="alim-score-label">Sin registrar</span>
         </div>
       </div>
     </div>
@@ -252,32 +271,52 @@
 <div class="toast" id="toast">Día guardado ✓</div>
 
 <script>
-  let currentDate = new Date(); currentDate.setHours(0,0,0,0);
-  let currentTF = 'semana';
-  let chartInstance = null;
-  const HABITS = ['alimentacion','ejercicio','lectura','pantalla','agua','sueno'];
-  const HABIT_NAMES = { alimentacion:'Alimentación', ejercicio:'Act. física', lectura:'Lectura', pantalla:'Pantalla', agua:'Hidratación', sueno:'Sueño' };
+  var currentDate = new Date(); currentDate.setHours(0,0,0,0);
+  var currentTF = 'semana';
+  var chartInstance = null;
+  var HABITS = ['ejercicio','lectura','pantalla','agua','sueno'];
+  var HABIT_NAMES = { ejercicio:'Act. física', lectura:'Lectura', pantalla:'Pantalla', agua:'Hidratación', sueno:'Sueño' };
+  var STAR_LABELS = ['Sin registrar','Muy malo','Malo','Regular','Bueno','Excelente'];
 
   function dateKey(d) { return d.toISOString().slice(0,10); }
-  function getStore() { try { return JSON.parse(localStorage.getItem('hb_data_v2') || '{}'); } catch { return {}; } }
-  function saveStore(d) { try { localStorage.setItem('hb_data_v2', JSON.stringify(d)); } catch {} }
+  function getStore() { try { return JSON.parse(localStorage.getItem('hb_data_v3') || '{}'); } catch { return {}; } }
+  function saveStore(d) { try { localStorage.setItem('hb_data_v3', JSON.stringify(d)); } catch {} }
 
-  let dayState = {};
+  var dayState = {};
 
   function updateDateLabel() {
-    const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
-    const label = currentDate.toLocaleDateString('es-AR', opts);
+    var opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+    var label = currentDate.toLocaleDateString('es-AR', opts);
     document.getElementById('date-label').textContent = label.charAt(0).toUpperCase() + label.slice(1);
+    var iso = dateKey(currentDate);
+    document.getElementById('date-input').value = iso;
+  }
+
+  function onDateInputChange(val) {
+    if (!val) return;
+    var parts = val.split('-');
+    var d = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+    d.setHours(0,0,0,0);
+    currentDate = d;
+    updateDateLabel();
+    loadDayState();
+  }
+
+  function goToday() {
+    currentDate = new Date(); currentDate.setHours(0,0,0,0);
+    updateDateLabel();
+    loadDayState();
   }
 
   function loadDayState() {
-    const store = getStore();
-    const k = dateKey(currentDate);
+    var store = getStore();
+    var k = dateKey(currentDate);
     dayState = store[k] ? JSON.parse(JSON.stringify(store[k])) : {};
-    HABITS.forEach(h => {
-      const siBtn = document.querySelector('#habit-' + h + ' .btn-yn:first-child');
-      const noBtn = document.querySelector('#habit-' + h + ' .btn-yn:last-child');
-      const detail = document.getElementById('detail-' + h);
+
+    HABITS.forEach(function(h) {
+      var siBtn = document.querySelector('#habit-' + h + ' .btn-yn:first-child');
+      var noBtn = document.querySelector('#habit-' + h + ' .btn-yn:last-child');
+      var detail = document.getElementById('detail-' + h);
       siBtn.className = 'btn-yn'; noBtn.className = 'btn-yn';
       detail.classList.remove('open');
       if (dayState[h]) {
@@ -285,20 +324,44 @@
         else if (dayState[h].val === 'no') { noBtn.classList.add('selected-no'); }
       }
     });
-    if (dayState.alimentacion && dayState.alimentacion.stars) setStar('alimentacion', dayState.alimentacion.stars, true);
+
+    var alimStars = (dayState.alimentacion && dayState.alimentacion.stars != null) ? dayState.alimentacion.stars : null;
+    renderAlimStars(alimStars);
+
     if (dayState.ejercicio && dayState.ejercicio.sport) restoreSport(dayState.ejercicio.sport);
+    else document.querySelectorAll('.sport-btn').forEach(function(b) { b.classList.remove('selected'); });
+
     [['ejercicio','min'],['lectura','min'],['pantalla','h'],['agua','l'],['sueno','h']].forEach(function(pair) {
-      var h = pair[0], p = pair[1];
-      var el = document.getElementById(h + '-' + p);
-      if (el) el.value = (dayState[h] && dayState[h][p] != null) ? dayState[h][p] : '';
+      var el = document.getElementById(pair[0] + '-' + pair[1]);
+      if (el) el.value = (dayState[pair[0]] && dayState[pair[0]][pair[1]] != null) ? dayState[pair[0]][pair[1]] : '';
     });
+
     var asi = document.getElementById('alcohol-si');
     var ano = document.getElementById('alcohol-no');
-    if (asi && ano) {
-      asi.className = 'btn-yn'; ano.className = 'btn-yn';
-      if (dayState.agua && dayState.agua.alcohol === 'si') asi.classList.add('selected-si');
-      else if (dayState.agua && dayState.agua.alcohol === 'no') ano.classList.add('selected-no');
+    asi.className = 'btn-yn'; ano.className = 'btn-yn';
+    if (dayState.agua && dayState.agua.alcohol === 'si') asi.classList.add('selected-si');
+    else if (dayState.agua && dayState.agua.alcohol === 'no') ano.classList.add('selected-no');
+  }
+
+  function renderAlimStars(n) {
+    var label = document.getElementById('alim-score-label');
+    for (var i = 0; i <= 5; i++) {
+      var el = document.getElementById('star-alim-' + i);
+      if (!el) continue;
+      el.classList.remove('active');
     }
+    if (n === null || n === undefined) {
+      label.textContent = 'Sin registrar';
+      return;
+    }
+    document.getElementById('star-alim-' + n).classList.add('active');
+    label.textContent = STAR_LABELS[n] || '';
+  }
+
+  function setStar(h, n) {
+    if (!dayState[h]) dayState[h] = {};
+    dayState[h].stars = n;
+    if (h === 'alimentacion') renderAlimStars(n);
   }
 
   function toggleHabit(h, v, btn) {
@@ -310,12 +373,6 @@
     var detail = document.getElementById('detail-' + h);
     if (v === 'si') { siBtn.classList.add('selected-si'); detail.classList.add('open'); }
     else { noBtn.classList.add('selected-no'); detail.classList.remove('open'); }
-  }
-
-  function setStar(h, n, silent) {
-    if (!dayState[h]) dayState[h] = {};
-    dayState[h].stars = n;
-    document.querySelectorAll('#stars-' + h + ' .star').forEach(function(s, i) { s.classList.toggle('active', i < n); });
   }
 
   function restoreSport(s) {
@@ -406,12 +463,14 @@
     var avgScore = n > 0 ? (completedPerDay.reduce(function(a,b){return a+b;},0) / n / HABITS.length * 100) : 0;
     var streak = calcStreak(store);
     var alcoholDays = days.filter(function(k) { return store[k].agua && store[k].agua.alcohol === 'si'; }).length;
+    var alimScores = days.filter(function(k) { return store[k].alimentacion && store[k].alimentacion.stars != null; }).map(function(k) { return store[k].alimentacion.stars; });
+    var avgAlim = alimScores.length ? (alimScores.reduce(function(a,b){return a+b;},0)/alimScores.length).toFixed(1) : '-';
 
     document.getElementById('metric-grid').innerHTML =
       '<div class="metric-card"><div class="metric-val">' + n + '</div><div class="metric-lbl">Días registrados</div></div>' +
       '<div class="metric-card"><div class="metric-val">' + Math.round(avgScore) + '%</div><div class="metric-lbl">Adherencia promedio</div></div>' +
       '<div class="metric-card"><div class="metric-val">' + streak + '</div><div class="metric-lbl">Racha actual</div></div>' +
-      '<div class="metric-card"><div class="metric-val">' + alcoholDays + '</div><div class="metric-lbl">Días con alcohol</div></div>';
+      '<div class="metric-card"><div class="metric-val">' + avgAlim + '</div><div class="metric-lbl">Alim. promedio</div></div>';
 
     var barsEl = document.getElementById('habit-bars');
     if (n === 0) {
