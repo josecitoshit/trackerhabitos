@@ -40,16 +40,19 @@
     .alim-stars-wrap { display: flex; align-items: center; gap: 6px; }
     .alim-score-label { font-size: 13px; color: #888; margin-left: 6px; }
     .time-input { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-    .time-input:last-child { margin-bottom: 0; }
     .time-input input[type=number] { width: 70px; padding: 6px 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; background: #fff; color: #1a1a18; font-family: inherit; }
     .time-input input[type=number]:focus { outline: none; border-color: #639922; box-shadow: 0 0 0 3px rgba(99,153,34,0.15); }
     .time-input span { font-size: 13px; color: #888; }
     .text-input-wrap { margin-bottom: 12px; }
     .text-input-wrap input[type=text] { width: 100%; padding: 7px 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; background: #fff; color: #1a1a18; font-family: inherit; }
     .text-input-wrap input[type=text]:focus { outline: none; border-color: #639922; box-shadow: 0 0 0 3px rgba(99,153,34,0.15); }
+    textarea.comment-box { width: 100%; padding: 8px 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; background: #fff; color: #1a1a18; font-family: inherit; resize: vertical; min-height: 72px; line-height: 1.5; }
+    textarea.comment-box:focus { outline: none; border-color: #639922; box-shadow: 0 0 0 3px rgba(99,153,34,0.15); }
     .sport-btns { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
     .sport-btn { padding: 6px 16px; border-radius: 8px; border: 1px solid #ccc; font-size: 13px; cursor: pointer; background: transparent; color: #666; font-family: inherit; }
     .sport-btn.selected { background: #E6F1FB; color: #185FA5; border-color: #378ADD; }
+    .running-extra { display: none; }
+    .running-extra.open { display: block; }
     .subsection { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e5e0; }
     .subsection-label { font-size: 13px; font-weight: 500; color: #1a1a18; margin-bottom: 8px; }
     .save-btn { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #639922; background: #EAF3DE; color: #3B6D11; font-size: 15px; font-weight: 500; cursor: pointer; font-family: inherit; margin-top: 4px; transition: background 0.15s; }
@@ -71,32 +74,37 @@
     .modal { background: #fff; border-radius: 16px; padding: 1.5rem; width: 90%; max-width: 420px; max-height: 80vh; overflow-y: auto; }
     .modal-title { font-size: 16px; font-weight: 500; color: #1a1a18; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
     .modal-close { margin-left: auto; background: transparent; border: none; font-size: 20px; cursor: pointer; color: #888; line-height: 1; }
+    .modal-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1.25rem; }
+    .modal-stat { background: #f5f5f0; border-radius: 10px; padding: 12px; text-align: center; }
+    .modal-stat-val { font-size: 18px; font-weight: 500; color: #1a1a18; }
+    .modal-stat-lbl { font-size: 11px; color: #888; margin-top: 3px; line-height: 1.4; }
+    .modal-section-title { font-size: 12px; font-weight: 500; color: #888; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px; }
     .book-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e5e5e0; gap: 12px; }
     .book-row:last-child { border-bottom: none; }
     .book-name { font-size: 14px; color: #1a1a18; flex: 1; font-style: italic; }
-    .book-time { font-size: 13px; color: #888; white-space: nowrap; font-style: normal; }
+    .book-time { font-size: 13px; color: #888; white-space: nowrap; }
     .empty-msg { text-align: center; color: #888; font-size: 14px; padding: 1.5rem 0; }
     .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #3B6D11; color: #EAF3DE; padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 500; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; z-index: 100; }
     .toast.show { opacity: 1; }
 
     @media (prefers-color-scheme: dark) {
       body { background: #1a1a18; color: #e8e8e3; }
-      .section, .metric-card { background: #252523; border-color: #3a3a38; }
+      .section, .metric-card, .modal { background: #252523; border-color: #3a3a38; }
       .tab { border-color: #3a3a38; color: #aaa; }
       .tab.active { background: #333330; color: #e8e8e3; border-color: #666; }
       .btn-yn { border-color: #3a3a38; color: #aaa; }
       .btn-yn:hover { background: #333330; }
-      .habit-title, .subsection-label, .metric-val, .date-label-full, .book-name, .modal-title { color: #e8e8e3; }
-      .detail-label, .time-input span, .metric-lbl, .empty-msg, .alim-score-label, .book-time, .metric-hint { color: #888; }
+      .habit-title, .subsection-label, .metric-val, .date-label-full, .book-name, .modal-title, .modal-stat-val { color: #e8e8e3; }
+      .detail-label, .time-input span, .metric-lbl, .empty-msg, .alim-score-label, .book-time, .metric-hint, .modal-stat-lbl, .modal-section-title { color: #888; }
       .habit-detail, .subsection, .book-row { border-color: #3a3a38; }
-      .time-input input[type=number], .date-picker-row input[type=date], .text-input-wrap input[type=text] { background: #1a1a18; border-color: #3a3a38; color: #e8e8e3; }
+      .time-input input[type=number], .date-picker-row input[type=date], .text-input-wrap input[type=text], textarea.comment-box { background: #1a1a18; border-color: #3a3a38; color: #e8e8e3; }
       .star, .star-zero, .sport-btn { border-color: #3a3a38; }
       .tf-btn { border-color: #3a3a38; color: #aaa; }
       .tf-btn.active { background: #333330; color: #e8e8e3; border-color: #666; }
       .date-nav-btns button, .today-btn { border-color: #3a3a38; color: #aaa; }
       .date-nav-btns button:hover, .today-btn:hover { background: #333330; }
       .metric-card.clickable:hover { background: #333330; }
-      .modal { background: #252523; }
+      .modal-stat { background: #333330; }
       h1 { color: #e8e8e3; }
     }
   </style>
@@ -162,6 +170,13 @@
         <div class="time-input">
           <input type="number" id="ejercicio-min" min="0" max="300" placeholder="0" oninput="saveNum('ejercicio','min',this.value)">
           <span>minutos</span>
+        </div>
+        <div class="running-extra" id="running-extra">
+          <div class="detail-label">Distancia</div>
+          <div class="time-input">
+            <input type="number" id="ejercicio-km" min="0" max="200" step="0.1" placeholder="0" oninput="saveNum('ejercicio','km',this.value)">
+            <span>km</span>
+          </div>
         </div>
       </div>
     </div>
@@ -249,6 +264,16 @@
       </div>
     </div>
 
+    <div class="section">
+      <div class="habit-header">
+        <span style="font-size:18px;">💬</span>
+        <span class="habit-title">Comentario del día</span>
+      </div>
+      <div style="margin-top:14px;">
+        <textarea class="comment-box" id="comentario" placeholder="¿Algo que quieras recordar de hoy? (opcional)" oninput="saveComment(this.value)"></textarea>
+      </div>
+    </div>
+
     <button class="save-btn" onclick="saveDay()">Guardar día</button>
   </div>
 
@@ -263,13 +288,17 @@
   </div>
 </div>
 
-<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+<div class="modal-overlay" id="modal-books" onclick="closeModal('modal-books',event)">
   <div class="modal">
-    <div class="modal-title">
-      <span>📚 Tiempo por libro</span>
-      <button class="modal-close" onclick="closeModalDirect()">✕</button>
-    </div>
+    <div class="modal-title"><span>📚 Tiempo por libro</span><button class="modal-close" onclick="closeModalDirect('modal-books')">✕</button></div>
     <div id="modal-books-content"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-ejercicio" onclick="closeModal('modal-ejercicio',event)">
+  <div class="modal">
+    <div class="modal-title"><span>💪 Actividad física</span><button class="modal-close" onclick="closeModalDirect('modal-ejercicio')">✕</button></div>
+    <div id="modal-ejercicio-content"></div>
   </div>
 </div>
 
@@ -296,18 +325,15 @@
 
   function onDateInputChange(val) {
     if (!val) return;
-    var parts = val.split('-');
-    var d = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
-    d.setHours(0,0,0,0);
-    currentDate = d;
-    updateDateLabel();
-    loadDayState();
+    var p = val.split('-');
+    var d = new Date(parseInt(p[0]), parseInt(p[1])-1, parseInt(p[2]));
+    d.setHours(0,0,0,0); currentDate = d;
+    updateDateLabel(); loadDayState();
   }
 
   function goToday() {
     currentDate = new Date(); currentDate.setHours(0,0,0,0);
-    updateDateLabel();
-    loadDayState();
+    updateDateLabel(); loadDayState();
   }
 
   function loadDayState() {
@@ -316,23 +342,24 @@
     dayState = store[k] ? JSON.parse(JSON.stringify(store[k])) : {};
 
     HABITS.forEach(function(h) {
-      var siBtn = document.querySelector('#habit-' + h + ' .btn-yn:first-child');
-      var noBtn = document.querySelector('#habit-' + h + ' .btn-yn:last-child');
-      var detail = document.getElementById('detail-' + h);
-      siBtn.className = 'btn-yn'; noBtn.className = 'btn-yn';
-      detail.classList.remove('open');
+      var si = document.querySelector('#habit-' + h + ' .btn-yn:first-child');
+      var no = document.querySelector('#habit-' + h + ' .btn-yn:last-child');
+      var det = document.getElementById('detail-' + h);
+      si.className = 'btn-yn'; no.className = 'btn-yn'; det.classList.remove('open');
       if (dayState[h]) {
-        if (dayState[h].val === 'si') { siBtn.classList.add('selected-si'); detail.classList.add('open'); }
-        else if (dayState[h].val === 'no') { noBtn.classList.add('selected-no'); }
+        if (dayState[h].val === 'si') { si.classList.add('selected-si'); det.classList.add('open'); }
+        else if (dayState[h].val === 'no') { no.classList.add('selected-no'); }
       }
     });
 
     renderAlimStars((dayState.alimentacion && dayState.alimentacion.stars != null) ? dayState.alimentacion.stars : null);
 
-    if (dayState.ejercicio && dayState.ejercicio.sport) restoreSport(dayState.ejercicio.sport);
-    else document.querySelectorAll('.sport-btn').forEach(function(b) { b.classList.remove('selected'); });
+    var sport = dayState.ejercicio && dayState.ejercicio.sport;
+    document.querySelectorAll('.sport-btn').forEach(function(b) { b.classList.remove('selected'); });
+    if (sport) restoreSport(sport);
+    updateRunningExtra(sport);
 
-    [['ejercicio','min'],['lectura','min'],['pantalla','h'],['agua','l'],['sueno','h']].forEach(function(pair) {
+    [['ejercicio','min'],['ejercicio','km'],['lectura','min'],['pantalla','h'],['agua','l'],['sueno','h']].forEach(function(pair) {
       var el = document.getElementById(pair[0] + '-' + pair[1]);
       if (el) el.value = (dayState[pair[0]] && dayState[pair[0]][pair[1]] != null) ? dayState[pair[0]][pair[1]] : '';
     });
@@ -340,45 +367,50 @@
     var libroEl = document.getElementById('lectura-libro');
     if (libroEl) libroEl.value = (dayState.lectura && dayState.lectura.libro) ? dayState.lectura.libro : '';
 
-    var asi = document.getElementById('alcohol-si');
-    var ano = document.getElementById('alcohol-no');
+    var asi = document.getElementById('alcohol-si'), ano = document.getElementById('alcohol-no');
     asi.className = 'btn-yn'; ano.className = 'btn-yn';
     if (dayState.agua && dayState.agua.alcohol === 'si') asi.classList.add('selected-si');
     else if (dayState.agua && dayState.agua.alcohol === 'no') ano.classList.add('selected-no');
+
+    var com = document.getElementById('comentario');
+    if (com) com.value = (dayState.comentario) ? dayState.comentario : '';
   }
 
   function renderAlimStars(n) {
     for (var i = 0; i <= 5; i++) { var el = document.getElementById('star-alim-' + i); if (el) el.classList.remove('active'); }
-    var label = document.getElementById('alim-score-label');
-    if (n === null || n === undefined) { label.textContent = 'Sin registrar'; return; }
-    var el = document.getElementById('star-alim-' + n);
-    if (el) el.classList.add('active');
-    label.textContent = STAR_LABELS[n] || '';
+    var lbl = document.getElementById('alim-score-label');
+    if (n === null || n === undefined) { lbl.textContent = 'Sin registrar'; return; }
+    var el = document.getElementById('star-alim-' + n); if (el) el.classList.add('active');
+    lbl.textContent = STAR_LABELS[n] || '';
   }
 
   function setStar(n) {
     if (!dayState.alimentacion) dayState.alimentacion = {};
-    dayState.alimentacion.stars = n;
-    renderAlimStars(n);
+    dayState.alimentacion.stars = n; renderAlimStars(n);
   }
 
   function toggleHabit(h, v, btn) {
     if (!dayState[h]) dayState[h] = {};
     dayState[h].val = v;
-    var siBtn = document.querySelector('#habit-' + h + ' .btn-yn:first-child');
-    var noBtn = document.querySelector('#habit-' + h + ' .btn-yn:last-child');
-    siBtn.className = 'btn-yn'; noBtn.className = 'btn-yn';
-    var detail = document.getElementById('detail-' + h);
-    if (v === 'si') { siBtn.classList.add('selected-si'); detail.classList.add('open'); }
-    else { noBtn.classList.add('selected-no'); detail.classList.remove('open'); }
+    var si = document.querySelector('#habit-' + h + ' .btn-yn:first-child');
+    var no = document.querySelector('#habit-' + h + ' .btn-yn:last-child');
+    si.className = 'btn-yn'; no.className = 'btn-yn';
+    var det = document.getElementById('detail-' + h);
+    if (v === 'si') { si.classList.add('selected-si'); det.classList.add('open'); }
+    else { no.classList.add('selected-no'); det.classList.remove('open'); }
+  }
+
+  function updateRunningExtra(sport) {
+    var el = document.getElementById('running-extra');
+    if (el) { if (sport === 'running') el.classList.add('open'); else el.classList.remove('open'); }
   }
 
   function restoreSport(s) {
     document.querySelectorAll('.sport-btn').forEach(function(b) {
-      var txt = b.textContent.toLowerCase();
-      if ((s==='pesas'&&txt.includes('pesa'))||(s==='running'&&txt.includes('run'))||(s==='otro'&&txt.includes('otro'))) b.classList.add('selected');
-      else b.classList.remove('selected');
+      var t = b.textContent.toLowerCase();
+      if ((s==='pesas'&&t.includes('pesa'))||(s==='running'&&t.includes('run'))||(s==='otro'&&t.includes('otro'))) b.classList.add('selected');
     });
+    updateRunningExtra(s);
   }
 
   function setSport(s, btn) {
@@ -386,6 +418,8 @@
     dayState.ejercicio.sport = s;
     document.querySelectorAll('.sport-btn').forEach(function(b) { b.classList.remove('selected'); });
     if (btn) btn.classList.add('selected');
+    updateRunningExtra(s);
+    if (s !== 'running') { dayState.ejercicio.km = null; var el = document.getElementById('ejercicio-km'); if (el) el.value = ''; }
   }
 
   function saveNum(h, prop, val) {
@@ -398,38 +432,33 @@
     dayState[h][prop] = val.trim();
   }
 
+  function saveComment(val) { dayState.comentario = val.trim(); }
+
   function setAlcohol(v) {
     if (!dayState.agua) dayState.agua = {};
     dayState.agua.alcohol = v;
-    var si = document.getElementById('alcohol-si');
-    var no = document.getElementById('alcohol-no');
+    var si = document.getElementById('alcohol-si'), no = document.getElementById('alcohol-no');
     si.className = 'btn-yn'; no.className = 'btn-yn';
-    if (v === 'si') si.classList.add('selected-si');
-    else no.classList.add('selected-no');
+    if (v === 'si') si.classList.add('selected-si'); else no.classList.add('selected-no');
   }
 
   function saveDay() {
     var store = getStore();
     store[dateKey(currentDate)] = JSON.parse(JSON.stringify(dayState));
     saveStore(store);
-    var toast = document.getElementById('toast');
-    toast.classList.add('show');
-    setTimeout(function() { toast.classList.remove('show'); }, 2000);
+    var t = document.getElementById('toast'); t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 2000);
   }
 
   function changeDay(d) {
-    currentDate = new Date(currentDate);
-    currentDate.setDate(currentDate.getDate() + d);
-    updateDateLabel();
-    loadDayState();
+    currentDate = new Date(currentDate); currentDate.setDate(currentDate.getDate() + d);
+    updateDateLabel(); loadDayState();
   }
 
   function showTab(t) {
     document.getElementById('tab-registro').style.display = t === 'registro' ? '' : 'none';
     document.getElementById('tab-dashboard').style.display = t === 'dashboard' ? '' : 'none';
-    document.querySelectorAll('.tab').forEach(function(b, i) {
-      b.classList.toggle('active', (i===0&&t==='registro')||(i===1&&t==='dashboard'));
-    });
+    document.querySelectorAll('.tab').forEach(function(b,i) { b.classList.toggle('active',(i===0&&t==='registro')||(i===1&&t==='dashboard')); });
     if (t === 'dashboard') renderDashboard();
   }
 
@@ -450,83 +479,105 @@
     return arr.reduce(function(a,b){return a+b;},0) / arr.length;
   }
 
-  function fmtAvg(val, decimals, suffix) {
+  function fmtAvg(val, dec, suf) {
     if (val === null) return '-';
-    return val.toFixed(decimals) + (suffix ? ' ' + suffix : '');
+    return val.toFixed(dec) + (suf ? ' ' + suf : '');
   }
 
   function fmtMins(mins) {
-    var h = Math.floor(mins / 60);
-    var m = mins % 60;
+    var h = Math.floor(mins/60), m = mins % 60;
     return h > 0 ? h + 'h' + (m > 0 ? ' ' + m + 'min' : '') : mins + 'min';
   }
 
+  function statBox(val, lbl) {
+    return '<div class="modal-stat"><div class="modal-stat-val">' + val + '</div><div class="modal-stat-lbl">' + lbl + '</div></div>';
+  }
+
   function openBooksModal() {
-    var store = getStore();
-    var days = getFilteredDays();
-    var booksMap = {};
+    var store = getStore(), days = getFilteredDays(), booksMap = {};
     days.forEach(function(k) {
       var d = store[k];
       if (d.lectura && d.lectura.val === 'si' && d.lectura.libro && d.lectura.libro.trim() && d.lectura.min) {
-        var titulo = d.lectura.libro.trim();
-        booksMap[titulo] = (booksMap[titulo] || 0) + Number(d.lectura.min);
+        var t = d.lectura.libro.trim();
+        booksMap[t] = (booksMap[t] || 0) + Number(d.lectura.min);
       }
     });
     var entries = Object.keys(booksMap);
     var content = document.getElementById('modal-books-content');
-    if (entries.length === 0) {
-      content.innerHTML = '<div class="empty-msg">No hay libros registrados en este período.</div>';
-    } else {
+    if (!entries.length) { content.innerHTML = '<div class="empty-msg">No hay libros registrados en este período.</div>'; }
+    else {
       entries.sort(function(a,b) { return booksMap[b] - booksMap[a]; });
-      content.innerHTML = entries.map(function(titulo) {
-        return '<div class="book-row"><span class="book-name">📖 ' + titulo + '</span><span class="book-time">' + fmtMins(booksMap[titulo]) + '</span></div>';
+      content.innerHTML = entries.map(function(t) {
+        return '<div class="book-row"><span class="book-name">📖 ' + t + '</span><span class="book-time">' + fmtMins(booksMap[t]) + '</span></div>';
       }).join('');
     }
-    document.getElementById('modal-overlay').classList.add('open');
+    document.getElementById('modal-books').classList.add('open');
   }
 
-  function closeModal(e) {
-    if (e.target === document.getElementById('modal-overlay')) closeModalDirect();
+  function openEjercicioModal() {
+    var store = getStore(), days = getFilteredDays();
+    var diasPesas = 0, minPesas = 0, diasRunning = 0, minRunning = 0, kmRunning = 0, diasOtro = 0, minOtro = 0;
+    days.forEach(function(k) {
+      var d = store[k];
+      if (d.ejercicio && d.ejercicio.val === 'si') {
+        var s = d.ejercicio.sport, m = Number(d.ejercicio.min) || 0;
+        if (s === 'pesas') { diasPesas++; minPesas += m; }
+        else if (s === 'running') { diasRunning++; minRunning += m; kmRunning += Number(d.ejercicio.km) || 0; }
+        else { diasOtro++; minOtro += m; }
+      }
+    });
+    var html = '<div class="modal-stats">';
+    html += statBox(diasPesas + ' días', '🏋️ Días de pesas');
+    html += statBox(minPesas > 0 ? fmtMins(minPesas) : '-', '🏋️ Total pesas');
+    html += statBox(diasRunning + ' días', '🏃 Días de running');
+    html += statBox(minRunning > 0 ? fmtMins(minRunning) : '-', '🏃 Total running');
+    html += statBox(kmRunning > 0 ? kmRunning.toFixed(1) + ' km' : '-', '🏃 Km totales');
+    if (diasOtro > 0) {
+      html += statBox(diasOtro + ' días', '⚡ Días otras act.');
+      html += statBox(minOtro > 0 ? fmtMins(minOtro) : '-', '⚡ Total otras');
+    }
+    html += '</div>';
+    document.getElementById('modal-ejercicio-content').innerHTML = html;
+    document.getElementById('modal-ejercicio').classList.add('open');
   }
 
-  function closeModalDirect() {
-    document.getElementById('modal-overlay').classList.remove('open');
-  }
+  function closeModal(id, e) { if (e.target === document.getElementById(id)) closeModalDirect(id); }
+  function closeModalDirect(id) { document.getElementById(id).classList.remove('open'); }
 
-  function metricCard(emoji, val, label, clickable, hint) {
-    var cls = 'metric-card' + (clickable ? ' clickable' : '');
-    var onclick = clickable ? ' onclick="openBooksModal()"' : '';
-    var hintHtml = hint ? '<span class="metric-hint">' + hint + '</span>' : '';
-    return '<div class="' + cls + '"' + onclick + '><span class="metric-emoji">' + emoji + '</span><div class="metric-text"><span class="metric-val">' + val + '</span><span class="metric-lbl">' + label + '</span>' + hintHtml + '</div></div>';
+  function metricCard(emoji, val, lbl, clickFn, hint) {
+    var cls = 'metric-card' + (clickFn ? ' clickable' : '');
+    var oc = clickFn ? ' onclick="' + clickFn + '()"' : '';
+    var h = hint ? '<span class="metric-hint">' + hint + '</span>' : '';
+    return '<div class="' + cls + '"' + oc + '><span class="metric-emoji">' + emoji + '</span><div class="metric-text"><span class="metric-val">' + val + '</span><span class="metric-lbl">' + lbl + '</span>' + h + '</div></div>';
   }
 
   function renderDashboard() {
-    var store = getStore();
-    var days = getFilteredDays();
-    var n = days.length;
+    var store = getStore(), days = getFilteredDays(), n = days.length;
     var totalDays = currentTF === 'semana' ? 7 : currentTF === 'mes' ? 30 : currentTF === 'año' ? 365 : null;
 
-    var alcoholDays = days.filter(function(k) { return store[k].agua && store[k].agua.alcohol === 'si'; }).length;
-    var alimScores = days.filter(function(k) { return store[k].alimentacion && store[k].alimentacion.stars != null; }).map(function(k) { return store[k].alimentacion.stars; });
-    var lecturaMin = days.filter(function(k) { return store[k].lectura && store[k].lectura.val === 'si' && store[k].lectura.min; }).map(function(k) { return store[k].lectura.min; });
-    var pantallaH = days.filter(function(k) { return store[k].pantalla && store[k].pantalla.val === 'si' && store[k].pantalla.h; }).map(function(k) { return store[k].pantalla.h; });
-    var ejercicioMin = days.filter(function(k) { return store[k].ejercicio && store[k].ejercicio.val === 'si' && store[k].ejercicio.min; }).map(function(k) { return store[k].ejercicio.min; });
-    var suenoH = days.filter(function(k) { return store[k].sueno && store[k].sueno.val === 'si' && store[k].sueno.h; }).map(function(k) { return store[k].sueno.h; });
+    var alimScores = days.filter(function(k){ return store[k].alimentacion && store[k].alimentacion.stars != null; }).map(function(k){ return store[k].alimentacion.stars; });
+    var lecturaMin = days.filter(function(k){ return store[k].lectura && store[k].lectura.val==='si' && store[k].lectura.min; }).map(function(k){ return store[k].lectura.min; });
+    var pantallaH = days.filter(function(k){ return store[k].pantalla && store[k].pantalla.val==='si' && store[k].pantalla.h; }).map(function(k){ return store[k].pantalla.h; });
+    var ejercicioMin = days.filter(function(k){ return store[k].ejercicio && store[k].ejercicio.val==='si' && store[k].ejercicio.min; }).map(function(k){ return store[k].ejercicio.min; });
+    var suenoH = days.filter(function(k){ return store[k].sueno && store[k].sueno.val==='si' && store[k].sueno.h; }).map(function(k){ return store[k].sueno.h; });
+    var alcoholDays = days.filter(function(k){ return store[k].agua && store[k].agua.alcohol==='si'; }).length;
 
     var diasLabel = totalDays ? n + ' / ' + totalDays : String(n);
     var alimVal = avg(alimScores);
     var alimDisplay = alimVal !== null ? alimVal.toFixed(1) + ' ★' : '-';
-    var lecturaVal = avg(lecturaMin);
-    var lecturaDisplay = lecturaVal !== null ? Math.round(lecturaVal) + ' min' : '-';
+    var lectVal = avg(lecturaMin);
+    var lectDisplay = lectVal !== null ? Math.round(lectVal) + ' min' : '-';
+    var ejercVal = avg(ejercicioMin);
+    var ejercDisplay = ejercVal !== null ? Math.round(ejercVal) + ' min' : '-';
 
     document.getElementById('metric-grid').innerHTML =
-      metricCard('📅', diasLabel, 'Días registrados / totales', false, '') +
-      metricCard('🥗', alimDisplay, 'Alimentación promedio', false, '') +
-      metricCard('📚', lecturaDisplay, 'Tiempo lectura promedio', true, 'Tocá para ver por libro') +
-      metricCard('📱', fmtAvg(avg(pantallaH), 1, 'h'), 'Horas en pantalla promedio', false, '') +
-      metricCard('💪', fmtAvg(avg(ejercicioMin), 0, 'min'), 'Minutos actividad física promedio', false, '') +
-      metricCard('🍷', String(alcoholDays), 'Días con consumo de alcohol', false, '') +
-      metricCard('😴', fmtAvg(avg(suenoH), 1, 'h'), 'Horas de sueño promedio', false, '');
+      metricCard('📅', diasLabel, 'Días registrados / totales', null, '') +
+      metricCard('🥗', alimDisplay, 'Alimentación promedio', null, '') +
+      metricCard('📚', lectDisplay, 'Tiempo lectura promedio', 'openBooksModal', 'Tocá para ver por libro') +
+      metricCard('📱', fmtAvg(avg(pantallaH), 1, 'h'), 'Horas en pantalla promedio', null, '') +
+      metricCard('💪', ejercDisplay, 'Minutos actividad física promedio', 'openEjercicioModal', 'Tocá para ver el detalle') +
+      metricCard('🍷', String(alcoholDays), 'Días con consumo de alcohol', null, '') +
+      metricCard('😴', fmtAvg(avg(suenoH), 1, 'h'), 'Horas de sueño promedio', null, '');
   }
 
   function setTF(tf, btn) {
