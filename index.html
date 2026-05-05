@@ -13,8 +13,6 @@
     .tab-bar { display: flex; gap: 8px; margin-bottom: 1.5rem; }
     .tab { padding: 8px 20px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; cursor: pointer; background: transparent; color: #666; font-family: inherit; }
     .tab.active { background: #e8e8e3; color: #1a1a18; font-weight: 500; border-color: #999; }
-
-    /* DATE PICKER */
     .date-picker-wrap { margin-bottom: 1.5rem; }
     .date-picker-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
     .date-picker-row input[type=date] { padding: 7px 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 15px; font-family: inherit; background: #fff; color: #1a1a18; cursor: pointer; }
@@ -25,7 +23,6 @@
     .date-label-full { font-size: 15px; font-weight: 500; color: #1a1a18; padding: 4px 0; }
     .today-btn { padding: 6px 14px; border-radius: 8px; border: 1px solid #ccc; font-size: 13px; cursor: pointer; background: transparent; color: #666; font-family: inherit; }
     .today-btn:hover { background: #e8e8e3; }
-
     .section { background: #fff; border: 1px solid #e5e5e0; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 12px; }
     .habit-header { display: flex; align-items: center; gap: 12px; }
     .habit-title { font-size: 15px; font-weight: 500; color: #1a1a18; flex: 1; }
@@ -37,7 +34,7 @@
     .habit-detail { margin-top: 14px; border-top: 1px solid #e5e5e0; padding-top: 14px; display: none; }
     .habit-detail.open { display: block; }
     .detail-label { font-size: 12px; color: #888; margin-bottom: 6px; }
-    .stars { display: flex; gap: 6px; margin-bottom: 4px; }
+    .stars { display: flex; gap: 6px; }
     .star { width: 32px; height: 32px; border-radius: 8px; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; background: transparent; transition: all 0.15s; }
     .star.active { background: #FAEEDA; border-color: #EF9F27; }
     .star-zero { width: 32px; height: 32px; border-radius: 8px; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; font-size: 13px; cursor: pointer; background: transparent; color: #aaa; transition: all 0.15s; }
@@ -49,6 +46,9 @@
     .time-input input[type=number] { width: 70px; padding: 6px 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; background: #fff; color: #1a1a18; font-family: inherit; }
     .time-input input[type=number]:focus { outline: none; border-color: #639922; box-shadow: 0 0 0 3px rgba(99,153,34,0.15); }
     .time-input span { font-size: 13px; color: #888; }
+    .text-input-wrap { margin-bottom: 12px; }
+    .text-input-wrap input[type=text] { width: 100%; padding: 7px 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; background: #fff; color: #1a1a18; font-family: inherit; }
+    .text-input-wrap input[type=text]:focus { outline: none; border-color: #639922; box-shadow: 0 0 0 3px rgba(99,153,34,0.15); }
     .sport-btns { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
     .sport-btn { padding: 6px 16px; border-radius: 8px; border: 1px solid #ccc; font-size: 13px; cursor: pointer; background: transparent; color: #666; font-family: inherit; }
     .sport-btn.selected { background: #E6F1FB; color: #185FA5; border-color: #378ADD; }
@@ -56,10 +56,10 @@
     .subsection-label { font-size: 13px; font-weight: 500; color: #1a1a18; margin-bottom: 8px; }
     .save-btn { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #639922; background: #EAF3DE; color: #3B6D11; font-size: 15px; font-weight: 500; cursor: pointer; font-family: inherit; margin-top: 4px; transition: background 0.15s; }
     .save-btn:hover { background: #C0DD97; }
-    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
     .metric-card { background: #e8e8e3; border-radius: 8px; padding: 1rem; text-align: center; }
-    .metric-val { font-size: 24px; font-weight: 500; color: #1a1a18; }
-    .metric-lbl { font-size: 12px; color: #666; margin-top: 4px; }
+    .metric-val { font-size: 22px; font-weight: 500; color: #1a1a18; }
+    .metric-lbl { font-size: 11px; color: #666; margin-top: 4px; line-height: 1.4; }
     .timeframe-bar { display: flex; gap: 6px; margin-bottom: 1.5rem; flex-wrap: wrap; }
     .tf-btn { padding: 6px 14px; border-radius: 8px; border: 1px solid #ccc; font-size: 13px; cursor: pointer; background: transparent; color: #666; font-family: inherit; }
     .tf-btn.active { background: #e8e8e3; color: #1a1a18; border-color: #999; font-weight: 500; }
@@ -72,6 +72,10 @@
     .habit-pct { font-size: 13px; color: #888; min-width: 36px; text-align: right; }
     .empty-msg { text-align: center; color: #888; font-size: 14px; padding: 2rem 0; }
     .section-title { font-size: 13px; font-weight: 500; color: #888; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .book-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e5e5e0; gap: 12px; }
+    .book-row:last-child { border-bottom: none; }
+    .book-name { font-size: 14px; color: #1a1a18; flex: 1; font-style: italic; }
+    .book-time { font-size: 13px; color: #888; white-space: nowrap; }
     .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #3B6D11; color: #EAF3DE; padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 500; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; z-index: 100; }
     .toast.show { opacity: 1; }
 
@@ -82,16 +86,15 @@
       .tab.active { background: #333330; color: #e8e8e3; border-color: #666; }
       .btn-yn { border-color: #3a3a38; color: #aaa; }
       .btn-yn:hover { background: #333330; }
-      .habit-title, .subsection-label, .habit-row-name, .metric-val, .date-label-full { color: #e8e8e3; }
-      .detail-label, .time-input span, .metric-lbl, .habit-pct, .section-title, .empty-msg, .alim-score-label { color: #888; }
-      .habit-detail, .subsection { border-color: #3a3a38; }
-      .time-input input[type=number], .date-picker-row input[type=date] { background: #252523; border-color: #3a3a38; color: #e8e8e3; }
+      .habit-title, .subsection-label, .habit-row-name, .metric-val, .date-label-full, .book-name { color: #e8e8e3; }
+      .detail-label, .time-input span, .metric-lbl, .habit-pct, .section-title, .empty-msg, .alim-score-label, .book-time { color: #888; }
+      .habit-detail, .subsection, .book-row, .habit-row { border-color: #3a3a38; }
+      .time-input input[type=number], .date-picker-row input[type=date], .text-input-wrap input[type=text] { background: #252523; border-color: #3a3a38; color: #e8e8e3; }
       .star, .star-zero, .sport-btn { border-color: #3a3a38; }
       .metric-card { background: #333330; }
       .tf-btn { border-color: #3a3a38; color: #aaa; }
       .tf-btn.active { background: #333330; color: #e8e8e3; border-color: #666; }
       .habit-bar-wrap { background: #333330; }
-      .habit-row { border-color: #3a3a38; }
       .date-nav-btns button, .today-btn { border-color: #3a3a38; color: #aaa; }
       .date-nav-btns button:hover, .today-btn:hover { background: #333330; }
       h1 { color: #e8e8e3; }
@@ -108,7 +111,6 @@
   </div>
 
   <div id="tab-registro">
-
     <div class="date-picker-wrap">
       <div class="date-picker-row">
         <input type="date" id="date-input" onchange="onDateInputChange(this.value)">
@@ -121,7 +123,6 @@
       <div class="date-label-full" id="date-label"></div>
     </div>
 
-    <!-- ALIMENTACION: solo estrellas, sin si/no -->
     <div class="section">
       <div class="habit-header">
         <span style="font-size:18px;">🥗</span>
@@ -130,12 +131,12 @@
       <div style="margin-top:14px;">
         <div class="detail-label">¿Cómo comiste hoy? (0 = nada saludable, 5 = muy saludable)</div>
         <div class="alim-stars-wrap" style="margin-top:8px;">
-          <button class="star-zero" id="star-alim-0" onclick="setStar('alimentacion',0)">✕</button>
-          <button class="star" id="star-alim-1" onclick="setStar('alimentacion',1)">★</button>
-          <button class="star" id="star-alim-2" onclick="setStar('alimentacion',2)">★</button>
-          <button class="star" id="star-alim-3" onclick="setStar('alimentacion',3)">★</button>
-          <button class="star" id="star-alim-4" onclick="setStar('alimentacion',4)">★</button>
-          <button class="star" id="star-alim-5" onclick="setStar('alimentacion',5)">★</button>
+          <button class="star-zero" id="star-alim-0" onclick="setStar(0)">✕</button>
+          <button class="star" id="star-alim-1" onclick="setStar(1)">★</button>
+          <button class="star" id="star-alim-2" onclick="setStar(2)">★</button>
+          <button class="star" id="star-alim-3" onclick="setStar(3)">★</button>
+          <button class="star" id="star-alim-4" onclick="setStar(4)">★</button>
+          <button class="star" id="star-alim-5" onclick="setStar(5)">★</button>
           <span class="alim-score-label" id="alim-score-label">Sin registrar</span>
         </div>
       </div>
@@ -179,6 +180,10 @@
         <div class="time-input">
           <input type="number" id="lectura-min" min="0" max="600" placeholder="0" oninput="saveNum('lectura','min',this.value)">
           <span>minutos</span>
+        </div>
+        <div class="detail-label">Libro que estás leyendo</div>
+        <div class="text-input-wrap">
+          <input type="text" id="lectura-libro" placeholder="Título del libro..." oninput="saveText('lectura','libro',this.value)">
         </div>
       </div>
     </div>
@@ -254,13 +259,21 @@
       <button class="tf-btn" onclick="setTF('año',this)">Año</button>
       <button class="tf-btn" onclick="setTF('total',this)">Total</button>
     </div>
+
     <div class="metric-grid" id="metric-grid"></div>
+
     <div class="section">
       <div class="section-title">Adherencia por hábito</div>
       <div id="habit-bars"></div>
     </div>
+
+    <div class="section" id="books-section" style="display:none;">
+      <div class="section-title">Tiempo por libro</div>
+      <div id="books-list"></div>
+    </div>
+
     <div class="section">
-      <div class="section-title">Días registrados</div>
+      <div class="section-title">Hábitos completados por día</div>
       <div class="chart-wrap">
         <canvas id="mainChart" role="img" aria-label="Hábitos completados por día">Gráfico de progreso diario.</canvas>
       </div>
@@ -279,8 +292,8 @@
   var STAR_LABELS = ['Sin registrar','Muy malo','Malo','Regular','Bueno','Excelente'];
 
   function dateKey(d) { return d.toISOString().slice(0,10); }
-  function getStore() { try { return JSON.parse(localStorage.getItem('hb_data_v3') || '{}'); } catch { return {}; } }
-  function saveStore(d) { try { localStorage.setItem('hb_data_v3', JSON.stringify(d)); } catch {} }
+  function getStore() { try { return JSON.parse(localStorage.getItem('hb_data_v4') || '{}'); } catch { return {}; } }
+  function saveStore(d) { try { localStorage.setItem('hb_data_v4', JSON.stringify(d)); } catch {} }
 
   var dayState = {};
 
@@ -288,8 +301,7 @@
     var opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
     var label = currentDate.toLocaleDateString('es-AR', opts);
     document.getElementById('date-label').textContent = label.charAt(0).toUpperCase() + label.slice(1);
-    var iso = dateKey(currentDate);
-    document.getElementById('date-input').value = iso;
+    document.getElementById('date-input').value = dateKey(currentDate);
   }
 
   function onDateInputChange(val) {
@@ -336,6 +348,9 @@
       if (el) el.value = (dayState[pair[0]] && dayState[pair[0]][pair[1]] != null) ? dayState[pair[0]][pair[1]] : '';
     });
 
+    var libroEl = document.getElementById('lectura-libro');
+    if (libroEl) libroEl.value = (dayState.lectura && dayState.lectura.libro) ? dayState.lectura.libro : '';
+
     var asi = document.getElementById('alcohol-si');
     var ano = document.getElementById('alcohol-no');
     asi.className = 'btn-yn'; ano.className = 'btn-yn';
@@ -347,21 +362,18 @@
     var label = document.getElementById('alim-score-label');
     for (var i = 0; i <= 5; i++) {
       var el = document.getElementById('star-alim-' + i);
-      if (!el) continue;
-      el.classList.remove('active');
+      if (el) el.classList.remove('active');
     }
-    if (n === null || n === undefined) {
-      label.textContent = 'Sin registrar';
-      return;
-    }
-    document.getElementById('star-alim-' + n).classList.add('active');
+    if (n === null || n === undefined) { label.textContent = 'Sin registrar'; return; }
+    var el = document.getElementById('star-alim-' + n);
+    if (el) el.classList.add('active');
     label.textContent = STAR_LABELS[n] || '';
   }
 
-  function setStar(h, n) {
-    if (!dayState[h]) dayState[h] = {};
-    dayState[h].stars = n;
-    if (h === 'alimentacion') renderAlimStars(n);
+  function setStar(n) {
+    if (!dayState.alimentacion) dayState.alimentacion = {};
+    dayState.alimentacion.stars = n;
+    renderAlimStars(n);
   }
 
   function toggleHabit(h, v, btn) {
@@ -393,6 +405,11 @@
   function saveNum(h, prop, val) {
     if (!dayState[h]) dayState[h] = {};
     dayState[h][prop] = parseFloat(val) || 0;
+  }
+
+  function saveText(h, prop, val) {
+    if (!dayState[h]) dayState[h] = {};
+    dayState[h][prop] = val.trim();
   }
 
   function setAlcohol(v) {
@@ -453,24 +470,43 @@
     return streak;
   }
 
+  function avg(arr) {
+    if (!arr.length) return null;
+    return arr.reduce(function(a,b){return a+b;},0) / arr.length;
+  }
+
+  function fmtAvg(val, decimals, suffix) {
+    if (val === null) return '-';
+    return val.toFixed(decimals) + (suffix ? ' ' + suffix : '');
+  }
+
   function renderDashboard() {
     var store = getStore();
     var days = getFilteredDays();
     var n = days.length;
+    var totalDays = currentTF === 'semana' ? 7 : currentTF === 'mes' ? 30 : currentTF === 'año' ? 365 : null;
+
     var completedPerDay = days.map(function(k) {
       return HABITS.filter(function(h) { return store[k][h] && store[k][h].val === 'si'; }).length;
     });
-    var avgScore = n > 0 ? (completedPerDay.reduce(function(a,b){return a+b;},0) / n / HABITS.length * 100) : 0;
-    var streak = calcStreak(store);
+
     var alcoholDays = days.filter(function(k) { return store[k].agua && store[k].agua.alcohol === 'si'; }).length;
     var alimScores = days.filter(function(k) { return store[k].alimentacion && store[k].alimentacion.stars != null; }).map(function(k) { return store[k].alimentacion.stars; });
-    var avgAlim = alimScores.length ? (alimScores.reduce(function(a,b){return a+b;},0)/alimScores.length).toFixed(1) : '-';
+    var lecturaMin = days.filter(function(k) { return store[k].lectura && store[k].lectura.val === 'si' && store[k].lectura.min; }).map(function(k) { return store[k].lectura.min; });
+    var pantallaH = days.filter(function(k) { return store[k].pantalla && store[k].pantalla.val === 'si' && store[k].pantalla.h; }).map(function(k) { return store[k].pantalla.h; });
+    var ejercicioMin = days.filter(function(k) { return store[k].ejercicio && store[k].ejercicio.val === 'si' && store[k].ejercicio.min; }).map(function(k) { return store[k].ejercicio.min; });
+    var suenoH = days.filter(function(k) { return store[k].sueno && store[k].sueno.val === 'si' && store[k].sueno.h; }).map(function(k) { return store[k].sueno.h; });
+
+    var diasLabel = totalDays ? n + ' / ' + totalDays : String(n);
 
     document.getElementById('metric-grid').innerHTML =
-      '<div class="metric-card"><div class="metric-val">' + n + '</div><div class="metric-lbl">Días registrados</div></div>' +
-      '<div class="metric-card"><div class="metric-val">' + Math.round(avgScore) + '%</div><div class="metric-lbl">Adherencia promedio</div></div>' +
-      '<div class="metric-card"><div class="metric-val">' + streak + '</div><div class="metric-lbl">Racha actual</div></div>' +
-      '<div class="metric-card"><div class="metric-val">' + avgAlim + '</div><div class="metric-lbl">Alim. promedio</div></div>';
+      '<div class="metric-card"><div class="metric-val">' + diasLabel + '</div><div class="metric-lbl">Días registrados / días totales</div></div>' +
+      '<div class="metric-card"><div class="metric-val">' + fmtAvg(avg(alimScores), 1, '') + '</div><div class="metric-lbl">Alimentación promedio</div></div>' +
+      '<div class="metric-card"><div class="metric-val">' + fmtAvg(avg(lecturaMin), 0, 'min') + '</div><div class="metric-lbl">Tiempo lectura promedio</div></div>' +
+      '<div class="metric-card"><div class="metric-val">' + fmtAvg(avg(pantallaH), 1, 'h') + '</div><div class="metric-lbl">Horas en pantalla promedio</div></div>' +
+      '<div class="metric-card"><div class="metric-val">' + fmtAvg(avg(ejercicioMin), 0, 'min') + '</div><div class="metric-lbl">Minutos actividad física promedio</div></div>' +
+      '<div class="metric-card"><div class="metric-val">' + alcoholDays + '</div><div class="metric-lbl">Días con consumo de alcohol</div></div>' +
+      '<div class="metric-card"><div class="metric-val">' + fmtAvg(avg(suenoH), 1, 'h') + '</div><div class="metric-lbl">Horas de sueño promedio</div></div>';
 
     var barsEl = document.getElementById('habit-bars');
     if (n === 0) {
@@ -480,6 +516,31 @@
         var count = days.filter(function(k) { return store[k][h] && store[k][h].val === 'si'; }).length;
         var pct = Math.round(count / n * 100);
         return '<div class="habit-row"><span class="habit-row-name">' + HABIT_NAMES[h] + '</span><div class="habit-bar-wrap"><div class="habit-bar" style="width:' + pct + '%"></div></div><span class="habit-pct">' + pct + '%</span></div>';
+      }).join('');
+    }
+
+    var booksMap = {};
+    days.forEach(function(k) {
+      var d = store[k];
+      if (d.lectura && d.lectura.val === 'si' && d.lectura.libro && d.lectura.libro.trim() && d.lectura.min) {
+        var titulo = d.lectura.libro.trim();
+        booksMap[titulo] = (booksMap[titulo] || 0) + Number(d.lectura.min);
+      }
+    });
+    var booksSection = document.getElementById('books-section');
+    var booksList = document.getElementById('books-list');
+    var bookEntries = Object.keys(booksMap);
+    if (bookEntries.length === 0) {
+      booksSection.style.display = 'none';
+    } else {
+      booksSection.style.display = '';
+      bookEntries.sort(function(a,b) { return booksMap[b] - booksMap[a]; });
+      booksList.innerHTML = bookEntries.map(function(titulo) {
+        var mins = booksMap[titulo];
+        var horas = Math.floor(mins / 60);
+        var resto = mins % 60;
+        var tiempoStr = horas > 0 ? horas + 'h' + (resto > 0 ? ' ' + resto + 'min' : '') : mins + 'min';
+        return '<div class="book-row"><span class="book-name">' + titulo + '</span><span class="book-time">' + tiempoStr + '</span></div>';
       }).join('');
     }
 
