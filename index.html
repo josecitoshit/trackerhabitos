@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tracker Salud Jobix</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f0; color: #1a1a18; min-height: 100vh; padding: 1.5rem 1rem; }
@@ -55,21 +54,28 @@
     .subsection-label { font-size: 13px; font-weight: 500; color: #1a1a18; margin-bottom: 8px; }
     .save-btn { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #639922; background: #EAF3DE; color: #3B6D11; font-size: 15px; font-weight: 500; cursor: pointer; font-family: inherit; margin-top: 4px; transition: background 0.15s; }
     .save-btn:hover { background: #C0DD97; }
+    .timeframe-bar { display: flex; gap: 6px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .tf-btn { padding: 6px 14px; border-radius: 8px; border: 1px solid #ccc; font-size: 13px; cursor: pointer; background: transparent; color: #666; font-family: inherit; }
+    .tf-btn.active { background: #e8e8e3; color: #1a1a18; border-color: #999; font-weight: 500; }
     .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
     .metric-card { background: #fff; border: 1px solid #e5e5e0; border-radius: 12px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 12px; }
+    .metric-card.clickable { cursor: pointer; transition: background 0.15s; }
+    .metric-card.clickable:hover { background: #f5f5f0; }
     .metric-emoji { font-size: 22px; flex-shrink: 0; }
     .metric-text { display: flex; flex-direction: column; }
     .metric-val { font-size: 20px; font-weight: 500; color: #1a1a18; line-height: 1.2; }
     .metric-lbl { font-size: 11px; color: #888; margin-top: 3px; line-height: 1.4; }
-    .timeframe-bar { display: flex; gap: 6px; margin-bottom: 1.5rem; flex-wrap: wrap; }
-    .tf-btn { padding: 6px 14px; border-radius: 8px; border: 1px solid #ccc; font-size: 13px; cursor: pointer; background: transparent; color: #666; font-family: inherit; }
-    .tf-btn.active { background: #e8e8e3; color: #1a1a18; border-color: #999; font-weight: 500; }
-    .section-title { font-size: 13px; font-weight: 500; color: #888; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
-    .book-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e5e5e0; gap: 12px; }
+    .metric-hint { font-size: 10px; color: #bbb; margin-top: 2px; }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 200; align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: #fff; border-radius: 16px; padding: 1.5rem; width: 90%; max-width: 420px; max-height: 80vh; overflow-y: auto; }
+    .modal-title { font-size: 16px; font-weight: 500; color: #1a1a18; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+    .modal-close { margin-left: auto; background: transparent; border: none; font-size: 20px; cursor: pointer; color: #888; line-height: 1; }
+    .book-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e5e5e0; gap: 12px; }
     .book-row:last-child { border-bottom: none; }
     .book-name { font-size: 14px; color: #1a1a18; flex: 1; font-style: italic; }
-    .book-time { font-size: 13px; color: #888; white-space: nowrap; }
-    .empty-msg { text-align: center; color: #888; font-size: 14px; padding: 2rem 0; }
+    .book-time { font-size: 13px; color: #888; white-space: nowrap; font-style: normal; }
+    .empty-msg { text-align: center; color: #888; font-size: 14px; padding: 1.5rem 0; }
     .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #3B6D11; color: #EAF3DE; padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 500; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; z-index: 100; }
     .toast.show { opacity: 1; }
 
@@ -80,8 +86,8 @@
       .tab.active { background: #333330; color: #e8e8e3; border-color: #666; }
       .btn-yn { border-color: #3a3a38; color: #aaa; }
       .btn-yn:hover { background: #333330; }
-      .habit-title, .subsection-label, .habit-row-name, .metric-val, .date-label-full, .book-name { color: #e8e8e3; }
-      .detail-label, .time-input span, .metric-lbl, .section-title, .empty-msg, .alim-score-label, .book-time { color: #888; }
+      .habit-title, .subsection-label, .metric-val, .date-label-full, .book-name, .modal-title { color: #e8e8e3; }
+      .detail-label, .time-input span, .metric-lbl, .empty-msg, .alim-score-label, .book-time, .metric-hint { color: #888; }
       .habit-detail, .subsection, .book-row { border-color: #3a3a38; }
       .time-input input[type=number], .date-picker-row input[type=date], .text-input-wrap input[type=text] { background: #1a1a18; border-color: #3a3a38; color: #e8e8e3; }
       .star, .star-zero, .sport-btn { border-color: #3a3a38; }
@@ -89,6 +95,8 @@
       .tf-btn.active { background: #333330; color: #e8e8e3; border-color: #666; }
       .date-nav-btns button, .today-btn { border-color: #3a3a38; color: #aaa; }
       .date-nav-btns button:hover, .today-btn:hover { background: #333330; }
+      .metric-card.clickable:hover { background: #333330; }
+      .modal { background: #252523; }
       h1 { color: #e8e8e3; }
     }
   </style>
@@ -251,13 +259,17 @@
       <button class="tf-btn" onclick="setTF('año',this)">Año</button>
       <button class="tf-btn" onclick="setTF('total',this)">Total</button>
     </div>
-
     <div class="metric-grid" id="metric-grid"></div>
+  </div>
+</div>
 
-    <div class="section" id="books-section" style="display:none;">
-      <div class="section-title">Tiempo por libro</div>
-      <div id="books-list"></div>
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-title">
+      <span>📚 Tiempo por libro</span>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
     </div>
+    <div id="modal-books-content"></div>
   </div>
 </div>
 
@@ -443,8 +455,49 @@
     return val.toFixed(decimals) + (suffix ? ' ' + suffix : '');
   }
 
-  function metricCard(emoji, val, label) {
-    return '<div class="metric-card"><span class="metric-emoji">' + emoji + '</span><div class="metric-text"><span class="metric-val">' + val + '</span><span class="metric-lbl">' + label + '</span></div></div>';
+  function fmtMins(mins) {
+    var h = Math.floor(mins / 60);
+    var m = mins % 60;
+    return h > 0 ? h + 'h' + (m > 0 ? ' ' + m + 'min' : '') : mins + 'min';
+  }
+
+  function openBooksModal() {
+    var store = getStore();
+    var days = getFilteredDays();
+    var booksMap = {};
+    days.forEach(function(k) {
+      var d = store[k];
+      if (d.lectura && d.lectura.val === 'si' && d.lectura.libro && d.lectura.libro.trim() && d.lectura.min) {
+        var titulo = d.lectura.libro.trim();
+        booksMap[titulo] = (booksMap[titulo] || 0) + Number(d.lectura.min);
+      }
+    });
+    var entries = Object.keys(booksMap);
+    var content = document.getElementById('modal-books-content');
+    if (entries.length === 0) {
+      content.innerHTML = '<div class="empty-msg">No hay libros registrados en este período.</div>';
+    } else {
+      entries.sort(function(a,b) { return booksMap[b] - booksMap[a]; });
+      content.innerHTML = entries.map(function(titulo) {
+        return '<div class="book-row"><span class="book-name">📖 ' + titulo + '</span><span class="book-time">' + fmtMins(booksMap[titulo]) + '</span></div>';
+      }).join('');
+    }
+    document.getElementById('modal-overlay').classList.add('open');
+  }
+
+  function closeModal(e) {
+    if (e.target === document.getElementById('modal-overlay')) closeModalDirect();
+  }
+
+  function closeModalDirect() {
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+
+  function metricCard(emoji, val, label, clickable, hint) {
+    var cls = 'metric-card' + (clickable ? ' clickable' : '');
+    var onclick = clickable ? ' onclick="openBooksModal()"' : '';
+    var hintHtml = hint ? '<span class="metric-hint">' + hint + '</span>' : '';
+    return '<div class="' + cls + '"' + onclick + '><span class="metric-emoji">' + emoji + '</span><div class="metric-text"><span class="metric-val">' + val + '</span><span class="metric-lbl">' + label + '</span>' + hintHtml + '</div></div>';
   }
 
   function renderDashboard() {
@@ -461,40 +514,19 @@
     var suenoH = days.filter(function(k) { return store[k].sueno && store[k].sueno.val === 'si' && store[k].sueno.h; }).map(function(k) { return store[k].sueno.h; });
 
     var diasLabel = totalDays ? n + ' / ' + totalDays : String(n);
+    var alimVal = avg(alimScores);
+    var alimDisplay = alimVal !== null ? alimVal.toFixed(1) + ' ★' : '-';
+    var lecturaVal = avg(lecturaMin);
+    var lecturaDisplay = lecturaVal !== null ? Math.round(lecturaVal) + ' min' : '-';
 
     document.getElementById('metric-grid').innerHTML =
-      metricCard('📅', diasLabel, 'Días registrados / totales') +
-      metricCard('🥗', fmtAvg(avg(alimScores), 1, ''), 'Alimentación promedio') +
-      metricCard('📚', fmtAvg(avg(lecturaMin), 0, 'min'), 'Tiempo lectura promedio') +
-      metricCard('📱', fmtAvg(avg(pantallaH), 1, 'h'), 'Horas en pantalla promedio') +
-      metricCard('💪', fmtAvg(avg(ejercicioMin), 0, 'min'), 'Minutos actividad física promedio') +
-      metricCard('🍷', String(alcoholDays), 'Días con consumo de alcohol') +
-      metricCard('😴', fmtAvg(avg(suenoH), 1, 'h'), 'Horas de sueño promedio');
-
-    var booksMap = {};
-    days.forEach(function(k) {
-      var d = store[k];
-      if (d.lectura && d.lectura.val === 'si' && d.lectura.libro && d.lectura.libro.trim() && d.lectura.min) {
-        var titulo = d.lectura.libro.trim();
-        booksMap[titulo] = (booksMap[titulo] || 0) + Number(d.lectura.min);
-      }
-    });
-    var booksSection = document.getElementById('books-section');
-    var booksList = document.getElementById('books-list');
-    var bookEntries = Object.keys(booksMap);
-    if (bookEntries.length === 0) {
-      booksSection.style.display = 'none';
-    } else {
-      booksSection.style.display = '';
-      bookEntries.sort(function(a,b) { return booksMap[b] - booksMap[a]; });
-      booksList.innerHTML = bookEntries.map(function(titulo) {
-        var mins = booksMap[titulo];
-        var horas = Math.floor(mins / 60);
-        var resto = mins % 60;
-        var tiempoStr = horas > 0 ? horas + 'h' + (resto > 0 ? ' ' + resto + 'min' : '') : mins + 'min';
-        return '<div class="book-row"><span class="book-name">📖 ' + titulo + '</span><span class="book-time">' + tiempoStr + '</span></div>';
-      }).join('');
-    }
+      metricCard('📅', diasLabel, 'Días registrados / totales', false, '') +
+      metricCard('🥗', alimDisplay, 'Alimentación promedio', false, '') +
+      metricCard('📚', lecturaDisplay, 'Tiempo lectura promedio', true, 'Tocá para ver por libro') +
+      metricCard('📱', fmtAvg(avg(pantallaH), 1, 'h'), 'Horas en pantalla promedio', false, '') +
+      metricCard('💪', fmtAvg(avg(ejercicioMin), 0, 'min'), 'Minutos actividad física promedio', false, '') +
+      metricCard('🍷', String(alcoholDays), 'Días con consumo de alcohol', false, '') +
+      metricCard('😴', fmtAvg(avg(suenoH), 1, 'h'), 'Horas de sueño promedio', false, '');
   }
 
   function setTF(tf, btn) {
